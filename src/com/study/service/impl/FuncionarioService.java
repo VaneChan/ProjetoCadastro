@@ -1,5 +1,6 @@
 package com.study.service.impl;
 
+import com.study.domain.FuncionarioEntity;
 import com.study.dto.FuncionarioDto;
 import com.study.service.exception.FuncionarioNotFoundException;
 
@@ -7,16 +8,21 @@ import java.util.List;
 
 public interface FuncionarioService {
 
-    List<FuncionarioDto> getFuncionarioListFromUser(String userName);
+    List<FuncionarioDto> getFuncionarioListFromUser(String Name);
 
-    void deleteFuncionarioFromUser(String funcionarioName) throws FuncionarioNotFoundException;
+    void deleteFuncionarioFromUser(String name) throws FuncionarioNotFoundException;
 
-    void updateTodo(FuncionarioDto funcionarioDto) throws FuncionarioNotFoundException;
 
-    void findFuncionarioByName(String name);
+    void updateFuncionario(FuncionarioDto funcionarioDto) throws FuncionarioNotFoundException;
+
+    FuncionarioEntity findFuncionarioByName(String name) throws FuncionarioNotFoundException;
 
     void saveFuncionario(FuncionarioDto funcionarioDto);
 
-    //  TodoDto generateRandomTodo(UserDto userDto);
+    List<FuncionarioDto> getAll();
+
+    FuncionarioDto generateRandomFuncionario(FuncionarioDto funcionarioDto);
+
+
 }
 

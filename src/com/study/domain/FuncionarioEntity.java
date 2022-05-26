@@ -1,14 +1,18 @@
 package com.study.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -17,6 +21,7 @@ import java.util.List;
 public class FuncionarioEntity {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Size(min = 3)
@@ -27,11 +32,13 @@ public class FuncionarioEntity {
     @Email(regexp = ".+[@].+[\\.].+")
     private String email;
 
-    private String description;
+    @NotBlank(message="Conselho nao deve ficar vazio")
+    private String conselho;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "funcionarioEntity")
-    private List<FuncionarioEntity> FuncionarioEntityList;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private FuncionarioEntity funcionarioEntity;
 
 
     }
+
 

@@ -4,8 +4,11 @@ import com.study.domain.FuncionarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+
 @Repository
 public interface FuncionarioRepository extends JpaRepository<FuncionarioEntity, String> {
+    Arrays findAllByUserEntityEquals(FuncionarioEntity funcionarioEntity);
 }
 
 
