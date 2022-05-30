@@ -28,11 +28,11 @@ public class FuncionarioController {
     }
 
     @DeleteMapping(path="/funcionarios/{name}/{Id}")
-    public ResponseEntity<Void> deleteFuncionarioFromUser(@PathVariable(name="name") final String name,
-                                                   @PathVariable(name="Id") final long Id)
+
+    public ResponseEntity<Void> deleteFuncionarioFromUser(@PathVariable(name="name") final String name)
             throws FuncionarioNotFoundException {
 
-        service.deleteFuncionarioFromUser(name, Id);
+        service.deleteFuncionarioFromUser(name);
 
         return ResponseEntity.noContent().build();
     }

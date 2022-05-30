@@ -27,6 +27,8 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     private final FuncionarioRepository repository;
 
     private final RestTemplate restTemplate;
+    private String name;
+    private String funcionarioId;
 
     public void saveFuncionario(FuncionarioDto funcionarioDto) {
             FuncionarioEntity funcionarioEntity = new FuncionarioEntity(funcionarioDto.getFuncionarioName(),
@@ -53,30 +55,40 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         return repository
                 .findAllByUserEntityEquals(funcionarioEntity)
                 .stream()
-                .map(FuncionarioEntity -> new FuncionarioDto(funcionarioEntity.getId(), funcionarioEntity.getName(),
-                        funcionarioEntity.getConselho()))
+                .map(FuncionarioEntity -> {
+                    return new FuncionarioDto(funcionarioEntity.getId(), funcionarioEntity.getName(),
+                            funcionarioEntity.getCPF(), funcionarioEntity.getEmail(),funcionarioEntity.getConselho());
+                })
                 .collect(Collectors.toList());
     }
 
-
     @Override
-    public void deleteFuncionarioFromUser(final String name)
-            throws FuncionarioNotFoundException {
+    public void deleteFuncionarioFromUser(final String name, final long FuncionarioId) throws 
+            FuncionarioNotFoundException {
         try {
 
             checkNotNull(name);
+            checkArgument(FuncionarioId > 0);
 
-            FuncionarioService.findFuncionarioByName(name);
+            funcionarioService.findFuncionarioByName(name);
 
-            final FuncionarioEntity funcionarioEntity = findFuncionarioByName(name);
+            final FuncionarioEntity funcionarioEntity = findFuncionarioById(funcionarioId);
 
-            repository.delete(FuncionarioEntity);
+            repository.delete(funcionarioEntity);
 
         } catch (FuncionarioNotFoundException e) {
             log.error("Funcionario nao encontrado: " + name);
             log.error(e.getMessage());
             throw e;
+        } catch (FuncionarioNotFoundException e) {
+            log.error("FuncionarioEntity nao encontrado: " + funcionarioId);
+            log.error(e.getMessage());
+            throw e;
         }
+        
+    }
+
+    private FuncionarioEntity findFuncionarioById(String funcionarioId) {
     }
 
 
@@ -85,9 +97,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
         checkNotNull(funcionarioDto);
 
-        final FuncionarioEntity funcionarioEntity = funcionarioService.findFuncionarioByName(funcionarioDto.getName());
-        final FuncionarioEntity funcionarioEntity = FuncionarioEntity.builder()
-                .id(funcionarioDto.getId())
+        FuncionarioEntity funcionarioEntity = funcionarioService.findFuncionarioByName(funcionarioDto.getName());
+        funcionarioEntity = FuncionarioEntity.builder()
+                .id(funcionarioDto.Id())
                 .description(funcionarioDto.getConselho())
                 .funcionarioEntity(funcionarioEntity)
                 .build();
@@ -123,12 +135,13 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         return
                 FuncionarioDto.builder()
                         .id(entity.getId())
-                        .description(entity.getConselho())
+                        .conselho(entity.getConselho())
                         .name(entity.getFuncionarioEntity().getName())
                         .build();
     }
 
-    private FuncionarioEntity transformFuncionarioEntity(final ResponseAdviceDto responseApi, final FuncionarioEntity funcionarioEntity) {
+    private FuncionarioEntity transformFuncionarioEntity(final ResponseAdviceDto responseApi,
+                                                         final FuncionarioEntity funcionarioEntity) {
         return
                 FuncionarioEntity.builder()
                         .conselho(responseAdviceAPI.getConselho())

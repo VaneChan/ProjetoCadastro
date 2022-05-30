@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 
@@ -15,6 +17,8 @@ import javax.validation.constraints.NotBlank;
 
 public class FuncionarioDto {
 
+
+    private Long id;
     private String name;
     private int CPF;
     private String email;
