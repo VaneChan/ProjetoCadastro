@@ -1,6 +1,5 @@
 package com.study.controller;
 
-
 import com.study.dto.FuncionarioDto;
 import com.study.service.exception.FuncionarioNotFoundException;
 import com.study.service.impl.FuncionarioService;
@@ -38,20 +37,23 @@ public class FuncionarioController {
     }
 
     @PutMapping(path="/funcionarios")
-    public ResponseEntity<Void> updateFuncionario(@RequestBody final FuncionarioDto funcionarioDto) throws FuncionarioNotFoundException
+    public ResponseEntity<Void> updateFuncionario(@RequestBody final FuncionarioDto funcionarioDto)
+            throws FuncionarioNotFoundException
     {
         service.updateFuncionario(funcionarioDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @PostMapping(path="/funcionarios")
-    public ResponseEntity<Void> saveFuncionario(@RequestBody final FuncionarioDto funcionarioDto) throws FuncionarioNotFoundException
+    public ResponseEntity<Void> saveFuncionario(@RequestBody final FuncionarioDto funcionarioDto)
+            throws FuncionarioNotFoundException
     {
         service.saveFuncionario(funcionarioDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping(path="/random")
-    public ResponseEntity<FuncionarioDto> saveRandomFuncionarioDto(@RequestBody final FuncionarioDto funcionarioDto) {
+    public ResponseEntity<FuncionarioDto> saveRandomFuncionarioDto(@RequestBody final FuncionarioDto funcionarioDto)
+    {
 
         final FuncionarioDto dto = service.generateRandomFuncionario(funcionarioDto);
 

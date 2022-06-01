@@ -10,8 +10,7 @@ public interface FuncionarioService {
 
     List<FuncionarioDto> getFuncionarioListFromUser(String Name);
 
-    void deleteFuncionarioFromUser(String name) throws FuncionarioNotFoundException;
-
+    void deleteFuncionarioFromUser(String name, long FuncionarioId) throws FuncionarioNotFoundException;
 
     void updateFuncionario(FuncionarioDto funcionarioDto) throws FuncionarioNotFoundException;
 

@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 
@@ -18,14 +16,11 @@ import javax.validation.constraints.NotBlank;
 public class FuncionarioDto {
 
 
-    private Long id;
+    private Long Id;
     private String name;
     private int CPF;
     private String email;
-
-    @NotBlank(message="Descricao nao deve ficar vazia")
-    private String conselho;
-
+    public String conselho;
 
 
 }

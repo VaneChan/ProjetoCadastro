@@ -22,27 +22,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FuncionarioServiceImpl implements FuncionarioService {
 
-
     private final FuncionarioService funcionarioService;
     private final FuncionarioRepository repository;
-
     private final RestTemplate restTemplate;
-    private String name;
-    private String funcionarioId;
 
     public void saveFuncionario(FuncionarioDto funcionarioDto) {
-            FuncionarioEntity funcionarioEntity = new FuncionarioEntity(funcionarioDto.getFuncionarioName(),
-                    funcionarioDto.getName());
+
+        checkNotNull(funcionarioDto);
+
+        FuncionarioEntity funcionarioEntity = funcionarioService.findFuncionarioByName(funcionarioDto.getName());
+        funcionarioEntity = FuncionarioEntity.builder()
+                .conselho(funcionarioDto.getConselho())
+                .funcionarioEntity(funcionarioEntity)
+                .build();
         repository.save(funcionarioEntity);
     }
-
     public List<FuncionarioDto> getAll() {
         return
                 repository
                         .findAll()
                         .stream()
-                        .map(funcionario -> new FuncionarioDto(funcionario.getFuncionarioName(),
-                                funcionario.getName()))
+                        .map(funcionario -> new FuncionarioDto(funcionario.getName())
                         .collect(Collectors.toList());
     }
 
@@ -63,7 +63,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     @Override
-    public void deleteFuncionarioFromUser(final String name, final long FuncionarioId) throws 
+    public void deleteFuncionarioFromUser(final String name, final long FuncionarioId) throws
             FuncionarioNotFoundException {
         try {
 
@@ -71,8 +71,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             checkArgument(FuncionarioId > 0);
 
             funcionarioService.findFuncionarioByName(name);
-
-            final FuncionarioEntity funcionarioEntity = findFuncionarioById(funcionarioId);
+            final FuncionarioEntity funcionarioEntity = findFuncionarioByName(name);
 
             repository.delete(funcionarioEntity);
 
@@ -80,16 +79,10 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             log.error("Funcionario nao encontrado: " + name);
             log.error(e.getMessage());
             throw e;
-        } catch (FuncionarioNotFoundException e) {
-            log.error("FuncionarioEntity nao encontrado: " + funcionarioId);
-            log.error(e.getMessage());
-            throw e;
         }
-        
+
     }
 
-    private FuncionarioEntity findFuncionarioById(String funcionarioId) {
-    }
 
 
     @Override
@@ -99,8 +92,8 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
         FuncionarioEntity funcionarioEntity = funcionarioService.findFuncionarioByName(funcionarioDto.getName());
         funcionarioEntity = FuncionarioEntity.builder()
-                .id(funcionarioDto.Id())
-                .description(funcionarioDto.getConselho())
+                .Id(funcionarioDto.getId())
+                .conselho(funcionarioDto.getConselho())
                 .funcionarioEntity(funcionarioEntity)
                 .build();
         repository.save(funcionarioEntity);
@@ -126,25 +119,17 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
         repository.save(entity);
 
-        final FuncionarioDto dto = transformFuncionarioEntity (entity);
+        final FuncionarioDto dto;
+        dto = transformFuncionarioEntity (Entity);
 
         return  dto;
-    }
-
-    private FuncionarioDto transformFuncionarioDto(final FuncionarioEntity entity) {
-        return
-                FuncionarioDto.builder()
-                        .id(entity.getId())
-                        .conselho(entity.getConselho())
-                        .name(entity.getFuncionarioEntity().getName())
-                        .build();
     }
 
     private FuncionarioEntity transformFuncionarioEntity(final ResponseAdviceDto responseApi,
                                                          final FuncionarioEntity funcionarioEntity) {
         return
                 FuncionarioEntity.builder()
-                        .conselho(responseAdviceAPI.getConselho())
+                        .conselho(responseApi.getConselho())
                         .funcionarioEntity(funcionarioEntity)
                         .build();
     }

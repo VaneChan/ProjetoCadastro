@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Data
 @Builder
@@ -22,7 +21,7 @@ public class FuncionarioEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long Id;
 
     @Size(min = 3)
     public String name;
@@ -33,7 +32,7 @@ public class FuncionarioEntity {
     private String email;
 
     @NotBlank(message="Conselho nao deve ficar vazio")
-    private String conselho;
+    public String conselho;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private FuncionarioEntity funcionarioEntity;
