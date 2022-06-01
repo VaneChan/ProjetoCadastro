@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 @Repository
 public interface FuncionarioRepository extends JpaRepository<FuncionarioEntity, String> {
-    Arrays findAllByUserEntityEquals(FuncionarioEntity funcionarioEntity);
+
 }
 
 

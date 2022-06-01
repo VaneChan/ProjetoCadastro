@@ -42,18 +42,18 @@ public class FuncionarioServiceImpl implements FuncionarioService {
                 repository
                         .findAll()
                         .stream()
-                        .map(funcionario -> new FuncionarioDto(funcionario.getName())
+                        .map(funcionario -> transformFuncionarioEntity (funcionario))
                         .collect(Collectors.toList());
     }
 
     @Override
-    public List<FuncionarioDto> getFuncionarioListFromUser(final String Name) {
-        checkNotNull(name, "name null");
+    public List<FuncionarioDto> getFuncionarioListFromUser(final String name) {
+        checkNotNull( name, "name null");
 
         final FuncionarioEntity funcionarioEntity = funcionarioService.findFuncionarioByName(name);
 
         return repository
-                .findAllByUserEntityEquals(funcionarioEntity)
+                .findAll()
                 .stream()
                 .map(FuncionarioEntity -> {
                     return new FuncionarioDto(funcionarioEntity.getId(), funcionarioEntity.getName(),
@@ -82,8 +82,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         }
 
     }
-
-
 
     @Override
         public void updateFuncionario(final FuncionarioDto funcionarioDto) throws FuncionarioNotFoundException {
@@ -114,23 +112,54 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         final ResponseAdviceDto responseAdviceApi = getAdviceFromAPI();
 
         FuncionarioEntity funcionarioEntity = funcionarioService.findFuncionarioByName (funcionarioDto.getName());
+        if(funcionarioEntity!=null){
+            funcionarioEntity.setConselho(responseAdviceApi.getConselho());
+        }
+        else {
+            funcionarioEntity= FuncionarioEntity.builder()
+                    .Id(funcionarioDto.getId())
+                    .name(funcionarioDto.getName ())
+                    .CPF(funcionarioDto.getCPF())
+                    .email(funcionarioDto.getEmail())
+                    .conselho(responseAdviceApi.getConselho())
+                    .build();
 
-        final FuncionarioEntity entity = transformFuncionarioEntity(responseAdviceApi, funcionarioEntity);
+        }
 
-        repository.save(entity);
+
+
+        repository.save(funcionarioEntity);
 
         final FuncionarioDto dto;
-        dto = transformFuncionarioEntity (Entity);
+        dto = transformFuncionarioEntity(responseAdviceApi, funcionarioEntity);
 
         return  dto;
     }
 
-    private FuncionarioEntity transformFuncionarioEntity(final ResponseAdviceDto responseApi,
-                                                         final FuncionarioEntity funcionarioEntity) {
+    private FuncionarioDto transformFuncionarioEntity(final ResponseAdviceDto responseApi,
+                                                      final FuncionarioEntity funcionarioEntity) {
+
         return
-                FuncionarioEntity.builder()
+
+                FuncionarioDto.builder()
+                        .Id(funcionarioEntity.getId())
+                        .name(funcionarioEntity.getName ())
+                        .CPF(funcionarioEntity.getCPF())
+                        .email(funcionarioEntity.getEmail())
                         .conselho(responseApi.getConselho())
-                        .funcionarioEntity(funcionarioEntity)
+                        .build();
+    }
+    private FuncionarioDto transformFuncionarioEntity(final FuncionarioEntity funcionarioEntity)
+    {
+
+        return
+
+                FuncionarioDto.builder()
+                        .Id(funcionarioEntity.getId())
+                        .name(funcionarioEntity.getName ())
+                        .CPF(funcionarioEntity.getCPF())
+                        .email(funcionarioEntity.getEmail())
+                        .conselho(funcionarioEntity.getConselho())
                         .build();
     }
 
